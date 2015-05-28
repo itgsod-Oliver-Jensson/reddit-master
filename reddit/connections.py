@@ -4,7 +4,7 @@ import requests
 from pprint import pprint
 import sys
 
-from reddits import config
+from reddit import config
 from reddit.user import User
 
 app_name = config['app_name']
@@ -20,8 +20,8 @@ class Client():
         self.client_secret = keyring.get_password(app_name,'client_secret')
 
         if not (self.client_id or self.client_secret):
-                self.client_id = getpass.getpass("Your reddit bot client id: ")
-                self.client_secret = getpass.getpass("Your reddit bot client secret: ")
+                self.client_id = input("Your reddit bot client id: ")
+                self.client_secret = input("Your reddit bot client secret: ")
 
                 # save it for next time
                 keyring.set_password(app_name,'client_id',self.client_id)
@@ -33,7 +33,7 @@ class Client():
         passwd = keyring.get_password(app_name, reddit_id)
 
         if not passwd:
-            passwd = getpass.getpass()
+            passwd = input("password: ")
 
             # save it for next time
             keyring.set_password(app_name, reddit_id, passwd)
@@ -64,8 +64,5 @@ class Client():
         headers['Authorization'] = 'bearer %s' % self.access_token
 
         response = requests.get(uri,headers=headers)
-
-
-        print response.headers
 
         return response.json()
